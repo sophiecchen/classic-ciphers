@@ -15,7 +15,7 @@ The following scheme is used (must use capital letters)
 
 This program is run by `python3 hill-cipher.py [-e\|-d] '[message]'`. To handle spaces correctly, put your message between quotes. The message must have a length multiple of 3.
 
-This program was adapted code originally aimed at decoding a specific text with a given key. As a result, the key currently is hardcoded. This may be changed manually in the code at your discretion.
+This program was adapted from code originally aimed at decoding a specific text with a given key. As a result, the key currently is hardcoded. This may be changed manually in the code at your discretion.
 
 Example command: python3 hill-cipher.py -d 'IGSFVHIRMG UWW?ZNIQVBEF?RYD!X P?DRSVVQHORJ?HP'
 
