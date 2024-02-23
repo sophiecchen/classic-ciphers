@@ -1,0 +1,448 @@
+# Hill Cipher
+# Sophie Chen
+
+'''
+This program implements the Hill cipher, a linear-algebra based substitution cipher.
+
+The following scheme is used:
+0 = 'A'
+1 = 'B'
+...
+25 = 'Z'
+26 = ' '
+27 = '?'
+28 = '!'
+'''
+
+# Setup
+import sys
+
+# Matrix Objects
+class Matrix():
+	'''
+	The Matrix class creates a matrix (2d array).
+	'''
+
+	def __init__(self, row, column):
+		'''
+		Initializes a Matrix object with all zeros.
+
+		Parameter:
+		(int) row - the number of rows in the matrix
+		(int) column - the number of columns in the matrix
+		'''
+		self._row = row
+		self._column = column
+		self._matrix = []
+
+		# Initialize to the zero matrix.
+		for i in range(self._row):
+			rower = []
+			for j in range(self._column):
+				rower.append(0)
+			self._matrix.append(rower)
+
+	def getRow(self):
+		'''
+		Returns the number of rows in the matrix. (int)
+		'''
+		return self._row
+	
+	def getColumn(self):
+		'''
+		Returns the number of columns in the matrix. (int)
+		'''
+		return self._column
+
+	def getEntry(self, row, column):
+		'''
+		Returns an entry in the matrix.
+
+		Parameter:
+		(int) row - the row of the entry
+		(int) column - the column of the entry
+		'''
+		return self._matrix[row][column]
+
+	def printMatrix(self):
+		'''
+		Prints the matrix in a readable format
+		'''
+		for i in range(self._row):
+			print(self._matrix[i])
+		print("\n")
+	
+	def setEntry(self, row, column, value):
+		'''
+		Sets an entry in the matrix to a value.
+
+		Parameter:
+		(int) row - the row of the entry
+		(int) column - the column of the entry
+		value - the value the entry is set to
+		'''
+		try:
+			self._matrix[row][column] = value 
+		except IndexError:
+			print("Error: row/column outside of matrix bounds")
+
+	def setMatrixDown(self, data):
+		'''
+		Sets the matrix from top to bottom, left to right following given data.
+
+		Parameter:
+		(str) data - the data the matrix is set to, each entry getting one character
+		'''
+		counter = 0
+
+		for j in range(self._column):
+			for i in range(self._row):
+				self.setEntry(i, j, data[counter:counter+1])
+				counter += 1
+	
+	def multiplyRight(self, matrix):
+		'''
+		Right multiplies a given matrix to itself.
+
+		ie. returns AB in which self = A and matrix = B
+
+		Parameter:
+		(Matrix) matrix - the matrix to right multiply
+
+		Returns the result of the multiplication.
+		'''
+		try:
+			if self._column != matrix.getRow():
+				raise ArithmeticError
+		except ArithmeticError:
+			print("Error: cannot multiply matrices, wrong dimensions")
+		else:
+			newMatrix = StringMatrix(self._row, matrix.getColumn())
+
+			for i in range(self._row):
+				for j in range(matrix.getColumn()):
+					value = 0
+					counter = 0
+
+					while (counter < self._column):
+						value += self.getEntry(i, counter) * matrix.getEntry(counter, j)
+						counter += 1
+
+					newMatrix.setEntry(i, j, value)
+			
+			return newMatrix
+	
+	def mod29(self):
+		'''
+		Takes each entry in the matrix and mod29s it.
+		'''
+		for i in range(self._row):
+			for j in range(self._column):
+				self.setEntry(i, j, self.getEntry(i, j)%29)
+
+class KeyMatrix(Matrix):
+	'''
+	The KeyMatrix class is a child of the Matrix class specific to cryptograhic keys.
+	'''
+
+	def __init__(self, row, column):
+		'''
+		Initializes a KeyMatrix object with all zeros.
+
+		Parameter:
+		(int) row - the number of rows in the matrix
+		(int) column - the number of columns in the matrix
+		'''
+		super().__init__(row, column)
+
+	def setMatrixDown(self, array):
+		'''
+		Sets the matrix from top to bottom, left to right following given data.
+
+		Parameter:
+		(array) array - the data the matrix is set to, each entry getting one item in the array
+		'''
+		counter = 0
+
+		for j in range(self._column):
+			for i in range(self._row):
+				self.setEntry(i, j, array[counter])
+				counter += 1
+
+	def multiplyRows(self, multArr):
+		'''
+		Multiplies each row by the corresponding value in the array.
+
+		ie. the first row is multiplied by the first entry in the array, and so on...
+
+		Parameter:
+		(int array) multArr - the value that each row will be multiplied by
+		'''
+		try:
+			if len(multArr) != self._row:
+				raise ValueError
+		except ValueError:
+			print("Error: array attribute length should be equal to number of rows")
+		else:
+			for i in range(self._row):
+				for j in range(self._column):
+					self.setEntry(i, j, multArr[i]*self.getEntry(i, j))
+
+class StringMatrix(Matrix):
+	'''
+	The StringMatrix class is a child of the Matrix class specific to cryptographic texts.
+	'''
+
+	def __init__(self, row, column):
+		'''
+		Initializes a StringMatrix object with all zeros.
+
+		Parameter:
+		(int) row - the number of rows in the matrix
+		(int) column - the number of columns in the matrix
+		'''
+		super().__init__(row, column)
+
+	def getStringDown(self):
+		'''
+		Returns the values of the matrix from top to bottom, left to right. (str)
+		'''
+		string = ""
+		for j in range(self._column):
+			for i in range(self._row):
+				string += self.getEntry(i, j)
+
+		return string
+
+	def messNum(self):
+		'''
+		Replaces each character in the matrix with its corresponding number.
+		'''
+		switcher = {
+			"a": 0,
+			"b": 1,
+			"c": 2,
+			"d": 3,
+			"e": 4,
+			"f": 5,
+			"g": 6,
+			"h": 7,
+			"i": 8,
+			"j": 9,
+			"k": 10,
+			"l": 11,
+			"m": 12,
+			"n": 13,
+			"o": 14,
+			"p": 15,
+			"q": 16,
+			"r": 17,
+			"s": 18,
+			"t": 19,
+			"u": 20,
+			"v": 21,
+			"w": 22,
+			"x": 23,
+			"y": 24,
+			"z": 25,
+			" ": 26,
+			"?": 27,
+			"!": 28
+		}
+
+		for i in range(self._row):
+			for j in range(self._column):
+				self.setEntry(i, j, switcher[self.getEntry(i, j)])
+
+	def numMess(self):
+		'''
+		Replaces each number in the matrix with its corresponding character.
+		'''
+		switcher = {
+			0: "a",
+			1: "b",
+			2: "c",
+			3: "d",
+			4: "e",
+			5: "f",
+			6: "g",
+			7: "h",
+			8: "i",
+			9: "j",
+			10: "k",
+			11: "l",
+			12: "m",
+			13: "n",
+			14: "o",
+			15: "p",
+			16: "q",
+			17: "r",
+			18: "s",
+			19: "t",
+			20: "u",
+			21: "v",
+			22: "w",
+			23: "x",
+			24: "y",
+			25: "z",
+			26: " ",
+			27: "?",
+			28: "!"
+		}
+
+		for i in range(self._row):
+			for j in range(self._column):
+				self.setEntry(i, j, switcher[self.getEntry(i, j)])
+
+# Helper Functions
+def invMod(number, moder):
+	#a * x ≡ 1 (mod m)
+
+    number = number % moder
+
+    for i in range(1, moder): 
+        if ((number * i) % moder == 1): 
+            return i
+
+    return 1
+
+def invModArray(arrayer, moder):
+	result = []
+
+	for i in arrayer:
+		result.append(invMod(i, moder))
+
+	return result
+
+# Crypto Functions
+def encrypter(message, key):
+	'''
+	Encrypts a message, matrix mod 29, with work shown.
+
+	Parameter:
+	(str) message - the message to be encrypted (length divisible by 3)
+	(int array) key - the 3x3 matrix key, written top to bottom, left to right
+	
+	Returns the cipher text. (str)
+	'''
+	try:
+		if len(message)%3 != 0:
+			raise ValueError
+		if len(key) != 9:
+			raise ValueError
+	
+	except ValueError:
+		print("Error: message length should be multiple of 3 OR key length should be 9")
+	
+	else:
+		messMatrix = StringMatrix(3, len(message)//3)
+		messMatrix.setMatrixDown(message)
+		print("Message Matrix in Characters:")
+		messMatrix.printMatrix()
+		
+		messMatrix.messNum()
+		print("Message Matrix in Numbers:")
+		messMatrix.printMatrix()
+
+		keyMatrix = KeyMatrix(3, 3)
+		keyMatrix.setMatrixDown(key)
+		print("Key Matrix:")
+		keyMatrix.printMatrix()
+
+		cipherMatrix = keyMatrix.multiplyRight(messMatrix)
+		print("Result of Multiplication:")
+		cipherMatrix.printMatrix()
+		
+		cipherMatrix.mod29()
+		print("Cipher Matrix Mod 29:")
+		cipherMatrix.printMatrix()
+		
+		cipherMatrix.numMess()
+		print("Cipher Matrix in Characters:")
+		cipherMatrix.printMatrix()
+
+		return cipherMatrix.getStringDown()
+
+def decrypter(cipher, invKeySimp, invKeyLeft):
+	'''
+	Decrypts a cipher text, matrix mod 29, with work shown.
+
+	Parameter:
+	(str) cipher - the cipher to be decrypted
+	(int array) invKeySimp - the "almost" inverse of the 3x3 matrix key, written top to bottom, left to right
+	(int array) invKeyLeft - the 3 values left of the augmented array from top to bottom
+
+	ie. if	[1  1 2 | 1 0 0] simplifies to 	[18 0  0 |  75 -6 -15]
+			[2 10 5 | 0 1 0]				[0  18 0 |  -1  2  -1]
+			[3  1 8 | 0 0 1]				[0  0  9 | -14  1   4]
+		
+		invKeySimp = [75, -1, -14, -6, 2, 1, -15, -1, 4]
+		invKeyLeft = [18, 18, 9]
+	
+	Returns the message. (str)
+	'''
+	try:
+		if len(cipher)%3 != 0:
+			raise ValueError
+		if len(invKeySimp) != 9:
+			raise ValueError
+	
+	except ValueError:
+		print("Error: cipher length should be multiple of 3 OR simplified key length should be 9")
+	
+	else:
+		cipherMatrix = StringMatrix(3, len(cipher)//3)
+		cipherMatrix.setMatrixDown(cipher)
+		print("Cipher Matrix in Characters:")
+		cipherMatrix.printMatrix()
+		
+		cipherMatrix.messNum()
+		print("Cipher Matrix in Numbers:")
+		cipherMatrix.printMatrix()
+
+		keyMatrix = KeyMatrix(3, 3)
+		keyMatrix.setMatrixDown(invKeySimp)
+		print("Almost Inverse Key Matrix:")
+		keyMatrix.printMatrix()
+
+		invKeyMult = invModArray(invKeyLeft, 29)
+		print("Multiply each row by: " + str(invKeyMult) + "\n")
+		keyMatrix.multiplyRows(invKeyMult)
+		print("Almost Inverse Key Matrix with Inverse Mod29 Multiplication:")
+		keyMatrix.printMatrix()
+		
+		keyMatrix.mod29()
+		print("Key Matrix Mod 29:")
+		keyMatrix.printMatrix()
+
+		messMatrix = keyMatrix.multiplyRight(cipherMatrix)
+		print("Result of Multiplication:")
+		messMatrix.printMatrix()
+		
+		messMatrix.mod29()
+		print("Message Matrix Mod 29:")
+		messMatrix.printMatrix()
+		
+		messMatrix.numMess()
+		print("Message Matrix in Characters:")
+		messMatrix.printMatrix()
+
+		return messMatrix.getStringDown()
+
+# Main
+def main():
+	'''
+	The main functionality.
+	'''
+
+	print("Here be encryption:\n")
+	# Example message and key (encryption matrix):
+	cipher = encrypter("the celestial river falls from heaven on high", [1, 2, 3, 1, 10, 1, 2, 5, 8])
+	print("Cipher text: " + cipher)
+
+	print("\nHere be decryption:\n")
+	# Example ciphertext and key (encryption matrix):
+	message = decrypter("li bhumwydbzshahjavdg", [36, -16, 1, -11, 6, -1, 1, -1, 1], [5, 5, 5])
+	print("Message: " + message)
+
+main()
