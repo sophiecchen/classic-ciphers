@@ -2,9 +2,9 @@
 # Sophie Chen
 
 '''
-This program implements the Hill cipher, a linear-algebra based substitution cipher.
+This program implements the Hill cipher, a linear algebra-based polygraphic substitution cipher, for messages with length multiple 3 with a hard-coded key.
 
-The following scheme is used:
+The following scheme is used (must use capital letters)
 0 = 'A'
 1 = 'B'
 ...
@@ -12,6 +12,14 @@ The following scheme is used:
 26 = ' '
 27 = '?'
 28 = '!'
+
+This program is run by `python3 hill-cipher.py [-e\|-d] '[message]'`. To handle spaces correctly, put your message between quotes. The message must have a length multiple of 3.
+
+This program was adapted code originally aimed at decoding a specific text with a given key. As a result, the key currently is hardcoded. This may be changed manually in the code at your discretion.
+
+Example command: python3 hill-cipher.py -d 'IGSFVHIRMG UWW?ZNIQVBEF?RYD!X P?DRSVVQHORJ?HP'
+
+This command should return "THE CELESTIAL RIVER FALLS FROM HEAVEN ON HIGH".
 '''
 
 # Setup
@@ -85,6 +93,7 @@ class Matrix():
 			self._matrix[row][column] = value 
 		except IndexError:
 			print("Error: row/column outside of matrix bounds")
+			exit(1)
 
 	def setMatrixDown(self, data):
 		'''
@@ -116,6 +125,7 @@ class Matrix():
 				raise ArithmeticError
 		except ArithmeticError:
 			print("Error: cannot multiply matrices, wrong dimensions")
+			exit(1)
 		else:
 			newMatrix = StringMatrix(self._row, matrix.getColumn())
 
@@ -183,6 +193,7 @@ class KeyMatrix(Matrix):
 				raise ValueError
 		except ValueError:
 			print("Error: array attribute length should be equal to number of rows")
+			exit(1)
 		else:
 			for i in range(self._row):
 				for j in range(self._column):
@@ -219,32 +230,32 @@ class StringMatrix(Matrix):
 		Replaces each character in the matrix with its corresponding number.
 		'''
 		switcher = {
-			"a": 0,
-			"b": 1,
-			"c": 2,
-			"d": 3,
-			"e": 4,
-			"f": 5,
-			"g": 6,
-			"h": 7,
-			"i": 8,
-			"j": 9,
-			"k": 10,
-			"l": 11,
-			"m": 12,
-			"n": 13,
-			"o": 14,
-			"p": 15,
-			"q": 16,
-			"r": 17,
-			"s": 18,
-			"t": 19,
-			"u": 20,
-			"v": 21,
-			"w": 22,
-			"x": 23,
-			"y": 24,
-			"z": 25,
+			"A": 0,
+			"B": 1,
+			"C": 2,
+			"D": 3,
+			"E": 4,
+			"F": 5,
+			"G": 6,
+			"H": 7,
+			"I": 8,
+			"J": 9,
+			"K": 10,
+			"L": 11,
+			"M": 12,
+			"N": 13,
+			"O": 14,
+			"P": 15,
+			"Q": 16,
+			"R": 17,
+			"S": 18,
+			"T": 19,
+			"U": 20,
+			"V": 21,
+			"W": 22,
+			"X": 23,
+			"Y": 24,
+			"Z": 25,
 			" ": 26,
 			"?": 27,
 			"!": 28
@@ -259,32 +270,32 @@ class StringMatrix(Matrix):
 		Replaces each number in the matrix with its corresponding character.
 		'''
 		switcher = {
-			0: "a",
-			1: "b",
-			2: "c",
-			3: "d",
-			4: "e",
-			5: "f",
-			6: "g",
-			7: "h",
-			8: "i",
-			9: "j",
-			10: "k",
-			11: "l",
-			12: "m",
-			13: "n",
-			14: "o",
-			15: "p",
-			16: "q",
-			17: "r",
-			18: "s",
-			19: "t",
-			20: "u",
-			21: "v",
-			22: "w",
-			23: "x",
-			24: "y",
-			25: "z",
+			0: "A",
+			1: "B",
+			2: "C",
+			3: "D",
+			4: "E",
+			5: "F",
+			6: "G",
+			7: "H",
+			8: "I",
+			9: "J",
+			10: "K",
+			11: "L",
+			12: "M",
+			13: "N",
+			14: "O",
+			15: "P",
+			16: "Q",
+			17: "R",
+			18: "S",
+			19: "T",
+			20: "U",
+			21: "V",
+			22: "W",
+			23: "X",
+			24: "Y",
+			25: "Z",
 			26: " ",
 			27: "?",
 			28: "!"
@@ -333,6 +344,7 @@ def encrypter(message, key):
 	
 	except ValueError:
 		print("Error: message length should be multiple of 3 OR key length should be 9")
+		exit(1)
 	
 	else:
 		messMatrix = StringMatrix(3, len(message)//3)
@@ -389,6 +401,7 @@ def decrypter(cipher, invKeySimp, invKeyLeft):
 	
 	except ValueError:
 		print("Error: cipher length should be multiple of 3 OR simplified key length should be 9")
+		exit(1)
 	
 	else:
 		cipherMatrix = StringMatrix(3, len(cipher)//3)
@@ -435,14 +448,17 @@ def main():
 	The main functionality.
 	'''
 
-	print("Here be encryption:\n")
-	# Example message and key (encryption matrix):
-	cipher = encrypter("the celestial river falls from heaven on high", [1, 2, 3, 1, 10, 1, 2, 5, 8])
-	print("Cipher text: " + cipher)
-
-	print("\nHere be decryption:\n")
-	# Example ciphertext and key (encryption matrix):
-	message = decrypter("li bhumwydbzshahjavdg", [36, -16, 1, -11, 6, -1, 1, -1, 1], [5, 5, 5])
-	print("Message: " + message)
+	if (len(sys.argv) < 3 or len(sys.argv) > 4):
+		print("Usage: python3 hill-cipher.py [-e\|-d] [message]")
+		exit(1)
+	
+	if (sys.argv[1] != "-e" and sys.argv[1] != "-d"):
+		print("Usage: python3 hill-cipher.py [-e\|-d] [message]")
+		exit(1)
+	
+	if (sys.argv[1] == "-e"):
+		print(encrypter(sys.argv[2], [1, 3, 2, 2, 7, 5, 1, 4, 8]))
+	else:
+		print(decrypter(sys.argv[2], [36, -16, 1, -11, 6, -1, 1, -1, 1], [5, 5, 5]))
 
 main()
