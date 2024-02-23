@@ -2,7 +2,7 @@
 # Sophie Chen
 
 '''
-This program implements the Hill cipher, a linear algebra-based polygraphic substitution cipher, for messages with length multiple 3 with a hard-coded key.
+This program implements the Hill cipher, a linear algebra-based polygraphic substitution cipher, for messages with length multiple of 3 with a hard-coded key.
 
 The following scheme is used (must use capital letters)
 0 = 'A'

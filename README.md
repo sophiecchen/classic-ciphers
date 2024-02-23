@@ -6,4 +6,4 @@ This repository contains a collection classical ciphers. _There are more to be c
 
 | Cipher | Command to Run | Description |
 | - | - | - |
-| Hill Cipher | `python3 hill-cipher.py [-e\|-d] [text]` | Implements the Hill cipher, a linear algebra-based polygraphic substitution cipher, for messages with length multiple 3 on a hard-coded key. |
+| Hill Cipher | `python3 hill-cipher.py [-e\|-d] [text]` | Implements the Hill cipher, a linear algebra-based polygraphic substitution cipher, for messages with a length multiple of 3 on a hard-coded key. |
