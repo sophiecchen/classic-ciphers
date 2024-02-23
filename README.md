@@ -1,7 +1,9 @@
 Classical Ciphers
 ===========================
-281Bank | Fall 23
-
 By Sophie Chen
 
-_This project has been archived after class submission._
+This repository contains a collection classical ciphers.
+
+| Cipher | Command | Description |
+| - | - | - |
+| Hill Cipher | `python3 hill-cipher.py [-e\|-d] [text]` | The Hill Cipher is a linear algebra-based polygraphic substitution cipher. |
