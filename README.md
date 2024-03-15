@@ -2,7 +2,7 @@ Classical Ciphers
 ===========================
 By Sophie Chen
 
-This repository contains a collection classical ciphers. _There are more to be coming soon._
+This repository contains a collection classical ciphers.
 
 | Cipher | Command to Run | Description |
 | - | - | - |
