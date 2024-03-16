@@ -34,14 +34,14 @@ def shifter(message, shift):
 	result = ""
 
 	for c in message:
-		c = int(c)
+		c = ord(c)
 
-		if (c >= int('a') and c <= int('z')):
-			result += char((c - int('a') + shift) % 26 + int('a'))
-		elif (c >= int('A') and c <= int('Z')):
-			cipher += char((c - int('A') + shift) % 26 + int('A'))
+		if (c >= ord('a') and c <= ord('z')):
+			result += chr((c - ord('a') + shift) % 26 + ord('a'))
+		elif (c >= ord('A') and c <= ord('Z')):
+			result += chr((c - ord('A') + shift) % 26 + ord('A'))
 		else:
-			cipher += char(c)
+			result += chr(c)
 
 	return result
 
@@ -60,8 +60,8 @@ def main():
 		exit(1)
 	
 	if (sys.argv[1] == "-e"):
-		print(shifter(sys.argv[3], int(sys.argv[2]) * -1))
-	else:
 		print(shifter(sys.argv[3], int(sys.argv[2])))
+	else:
+		print(shifter(sys.argv[3], int(sys.argv[2]) * -1))
 
 main()
