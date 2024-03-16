@@ -2,7 +2,12 @@
 # Sophie Chen
 
 '''
-This program implements the Caesar cipher, a well-known substitution cipher that shifts each letter in the plaintext down the alphabet a fixed number of times. This program works exclusively with in capital letters in the English alphabet.
+This program implements the Vigenère cipher, a cipher that encodes each plaintext letter with a different Caesar cipher. This program shifts only letters in the English alphabet.
+
+This program is run by `python3 vigenere-cipher.py [-e |-d] [key] '[message]'`. To handle spaces correctly, put your message between quotes. [key] should composed of only letters in the English alphabet.
+
+Example commands: python3 vigenere-cipher.py -d abc "Hfnlp Yosnd!"
+				  python3 vigenere-cipher.py -e ABC "Hello World!"
 '''
 
 # Setup
