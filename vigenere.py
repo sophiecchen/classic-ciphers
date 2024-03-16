@@ -28,12 +28,20 @@ def key_translate(key, length, is_encrypt):
 	'''
 	shifts = []
 		
-	if (is_encrypt):
+	for i in range(length):
+		c = ord(key[i % len(key)])
+
+		if (c >= ord('a') and c <= ord('z')):
+			shifts.append(c - ord('a'))
+		elif (c >= ord('A') and c <= ord('Z')):
+			shifts.append(c - ord('A'))
+		else:
+			print("Error: key should only include characters in the English alphabet")
+			exit(1)
+
+	if not is_encrypt:
 		for i in range(length):
-			shifts.append(ord(key[i % len(key)]))
-	else:
-		for i in range(length):
-			shifts.append(ord(key[i % len(key)]) * -1)
+			shifts[i] = shifts[i] * -1
 
 	return shifts
 
@@ -50,8 +58,13 @@ def chain_shift(message, shifts):
 	'''
 	result = ""
 
-	for i in range(len(message)):
-		result += shifter(message[i], shifts[i])
+	i = 0
+	for c in message:
+		last_char = shifter(c, shifts[i])
+		result += last_char
+
+		if (ord(last_char) >= ord('a') and ord(last_char) <= ord('z')) or (ord(last_char) >= ord('A') and ord(last_char) <= ord('Z')):
+			i += 1
 
 	return result
 		
