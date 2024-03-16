@@ -4,15 +4,16 @@
 '''
 This program implements the Caesar cipher, a well-known substitution cipher that shifts each letter in the plaintext down the alphabet a fixed number of times. This program shifts only letters in the English alphabet.
 
-This program is run by `python3 caesar-cipher.py [-e |-d] [shift] [message]`. To handle spaces correctly, you may have to put your message between quotes. [shift] should be an integer.
+This program is run by `python3 caesar.py [-e |-d] [shift] [message]`. To handle spaces correctly, you may have to put your message between quotes. [shift] should be an integer.
 
-Example commands: python3 caesar-cipher.py -d 7 'Olssv Dvysk!'
-				  python3 caesar-cipher.py -e 7 'Hello World!'
+Example commands: python3 caesar.py -d 7 'Olssv Dvysk!'
+				  python3 caesar.py -e 7 'Hello World!'
 '''
 
 # Setup
 import sys
 
+# Crypto Functions 
 def shifter(message, shift):
 	'''
 	Shifts each letter of the message forward in the alphabet a fixed number.
@@ -52,11 +53,11 @@ def main():
 	'''
 
 	if (len(sys.argv) < 4 or len(sys.argv) > 5):
-		print("Usage: python3 caesar-cipher.py [-e |-d] [shift] [message]")
+		print("Usage: python3 caesar.py [-e |-d] [shift] [message]")
 		exit(1)
 	
 	if (sys.argv[1] != "-e" and sys.argv[1] != "-d"):
-		print("Usage: python3 caesar-cipher.py [-e |-d] [shift] [message]")
+		print("Usage: python3 caesar.py [-e |-d] [shift] [message]")
 		exit(1)
 	
 	if (sys.argv[1] == "-e"):
@@ -64,4 +65,5 @@ def main():
 	else:
 		print(shifter(sys.argv[3], int(sys.argv[2]) * -1))
 
-main()
+if __name__ == "__main__": 
+	main()

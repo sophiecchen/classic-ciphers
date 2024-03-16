@@ -13,11 +13,11 @@ The following scheme is used (must use capital letters)
 27 = '?'
 28 = '!'
 
-This program is run by `python3 hill-cipher.py [-e|-d] [message]`. To handle spaces correctly, you may have to put your message between quotes. The message must have a length multiple of 3.
+This program is run by `python3 hill.py [-e|-d] [message]`. To handle spaces correctly, you may have to put your message between quotes. The message must have a length multiple of 3.
 
 This program was adapted from code originally aimed at decoding a specific text with a given key. As a result, the key currently is hardcoded. This may be changed manually in the code at your discretion.
 
-Example command: python3 hill-cipher.py -d 'IGSFVHIRMG UWW?ZNIQVBEF?RYD!X P?DRSVVQHORJ?HP'
+Example command: python3 hill.py -d 'IGSFVHIRMG UWW?ZNIQVBEF?RYD!X P?DRSVVQHORJ?HP'
 
 This command should return "THE CELESTIAL RIVER FALLS FROM HEAVEN ON HIGH".
 '''
@@ -449,11 +449,11 @@ def main():
 	'''
 
 	if (len(sys.argv) < 3 or len(sys.argv) > 4):
-		print("Usage: python3 hill-cipher.py [-e|-d] [message]")
+		print("Usage: python3 hill.py [-e|-d] [message]")
 		exit(1)
 	
 	if (sys.argv[1] != "-e" and sys.argv[1] != "-d"):
-		print("Usage: python3 hill-cipher.py [-e|-d] [message]")
+		print("Usage: python3 hill.py [-e|-d] [message]")
 		exit(1)
 	
 	if (sys.argv[1] == "-e"):
@@ -461,4 +461,5 @@ def main():
 	else:
 		print(decrypter(sys.argv[2], [36, -16, 1, -11, 6, -1, 1, -1, 1], [5, 5, 5]))
 
-main()
+if __name__ == "__main__": 
+	main()
